@@ -1,170 +1,187 @@
-# ALX Travel App
+# ALX Travel App - Database Modeling and Data Seeding
 
-A Django-based travel listing platform built with Django REST Framework, featuring MySQL database integration, Swagger API documentation, and CORS support.
+This project demonstrates database modeling, serializers, and data seeding in Django for a travel booking platform.
 
-## 🚀 Features
+## Project Overview
 
-- **Django REST Framework**: Modern API development with powerful features
-- **MySQL Database**: Robust database integration with environment-based configuration
-- **Swagger Documentation**: Automatic API documentation at `/swagger/`
-- **CORS Support**: Cross-Origin Resource Sharing for frontend integration
-- **Celery Integration**: Background task processing capabilities
-- **Environment Configuration**: Secure configuration management with django-environ
+The ALX Travel App is a Django-based travel booking platform that allows users to:
+- Browse travel listings (properties available for booking)
+- Make bookings for specific dates
+- Leave reviews and ratings
+- Manage their travel reservations
 
-## 📋 Requirements
+## Features
 
-- Python 3.8+
-- MySQL Server
-- RabbitMQ (for Celery, optional)
+### Models
+- **Listing**: Travel properties with details like location, price, amenities
+- **Booking**: Reservation system with check-in/out dates and guest management
+- **Review**: Rating and review system linked to bookings
 
-## 🛠️ Installation
+### Serializers
+- **ListingSerializer**: Handles listing data serialization with host information
+- **BookingSerializer**: Manages booking data with validation and calculations
+- **ReviewSerializer**: Processes review and rating data
 
-1. **Clone the repository:**
+### Data Seeding
+- Management command to populate database with sample data
+- Configurable number of listings and users
+- Realistic sample data for testing and development
+
+## Project Structure
+
+```
+alx_travel_app_0x00/
+├── alx_travel_app/          # Django project settings
+├── listings/                # Main app
+│   ├── models.py           # Database models
+│   ├── serializers.py      # API serializers
+│   ├── views.py            # API views
+│   ├── urls.py             # URL routing
+│   └── management/
+│       └── commands/
+│           └── seed.py     # Database seeding command
+├── manage.py               # Django management script
+├── settings.py             # Project settings
+├── urls.py                 # Main URL configuration
+└── requirements.txt        # Dependencies
+```
+
+## Installation
+
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/Hayzedid/alx_travel_app.git
-   cd alx_travel_app
+   git clone <repository-url>
+   cd alx_travel_app_0x00
    ```
 
-2. **Create virtual environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
+2. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables:**
-   Copy `.env.example` to `.env` and configure your settings:
+3. **Run migrations**
    ```bash
-   cp .env.example .env
-   ```
-
-   Update the `.env` file with your database credentials and other settings.
-
-5. **Set up MySQL database:**
-   Create a MySQL database named `alx_travel_app_db` or update the `DB_NAME` in your `.env` file.
-
-6. **Run migrations:**
-   ```bash
-   python manage.py makemigrations
    python manage.py migrate
    ```
 
-7. **Create superuser (optional):**
+4. **Seed the database**
    ```bash
-   python manage.py createsuperuser
+   python manage.py seed
    ```
 
-## 🚀 Running the Application
+## Usage
 
-1. **Start the development server:**
-   ```bash
-   python manage.py runserver
-   ```
+### Database Seeding
 
-2. **Access the application:**
-   - API Base URL: `http://localhost:8000/api/`
-   - Admin Panel: `http://localhost:8000/admin/`
-   - Swagger Documentation: `http://localhost:8000/swagger/`
-   - ReDoc Documentation: `http://localhost:8000/redoc/`
+The project includes a comprehensive seeding command:
 
-## 📚 API Endpoints
-
-### Listings
-- `GET /api/listings/` - List all listings
-- `POST /api/listings/` - Create a new listing
-- `GET /api/listings/{id}/` - Get listing details
-- `PUT /api/listings/{id}/` - Update a listing
-- `DELETE /api/listings/{id}/` - Delete a listing
-
-### API Overview
-- `GET /api/overview/` - Get API endpoints overview
-
-## 🏗️ Project Structure
-
-```
-alx_travel_app/
-├── alx_travel_app/          # Main Django project
-│   ├── __init__.py
-│   ├── settings.py         # Django settings with environment config
-│   ├── urls.py            # Main URL configuration
-│   ├── wsgi.py
-│   └── asgi.py
-├── listings/               # Listings app
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py          # Listing model
-│   ├── serializers.py     # DRF serializers
-│   ├── tests.py
-│   ├── urls.py            # App URL configuration
-│   └── views.py           # API views
-├── venv/                  # Virtual environment (not in repo)
-├── .env                   # Environment variables (not in repo)
-├── .env.example          # Environment template
-├── requirements.txt      # Python dependencies
-├── README.md             # This file
-└── manage.py             # Django management script
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-The application uses environment variables for configuration. Key variables include:
-
-- `SECRET_KEY`: Django secret key
-- `DEBUG`: Debug mode (True/False)
-- `ALLOWED_HOSTS`: Comma-separated list of allowed hosts
-- `DB_ENGINE`: Database engine
-- `DB_NAME`: Database name
-- `DB_USER`: Database user
-- `DB_PASSWORD`: Database password
-- `DB_HOST`: Database host
-- `DB_PORT`: Database port
-- `CELERY_BROKER_URL`: Celery broker URL
-- `CELERY_RESULT_BACKEND`: Celery result backend
-
-### Database Setup
-
-1. Install MySQL Server
-2. Create a database: `CREATE DATABASE alx_travel_app_db;`
-3. Update `.env` with your MySQL credentials
-4. Run migrations: `python manage.py migrate`
-
-## 🧪 Testing
-
-Run tests with:
 ```bash
-python manage.py test
+# Basic seeding (10 listings, 5 additional users)
+python manage.py seed
+
+# Clear existing data and seed with custom amounts
+python manage.py seed --clear --listings 20 --users 10
+
+# Get help
+python manage.py seed --help
 ```
 
-## 📖 Documentation
+### API Endpoints
 
-- **Swagger UI**: `http://localhost:8000/swagger/`
-- **ReDoc**: `http://localhost:8000/redoc/`
+- `GET /api/listings/` - List all travel listings
+- `POST /api/listings/` - Create a new listing
+- `GET /api/listings/{id}/` - Get specific listing details
+- `PUT/PATCH /api/listings/{id}/` - Update listing
+- `DELETE /api/listings/{id}/` - Delete listing
 
-## 🤝 Contributing
+### Sample Data
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+The seeder creates realistic sample data including:
+- **Users**: Hosts and guests with different roles
+- **Listings**: Properties in various locations with amenities
+- **Bookings**: Reservations with different statuses
+- **Reviews**: Ratings and comments from completed stays
 
-## 📄 License
+## Models
 
-This project is licensed under the BSD License - see the LICENSE file for details.
+### Listing Model
+- Title, description, location
+- Price per night, guest capacity
+- Bedrooms, bathrooms, amenities
+- Host relationship and timestamps
 
-## 👥 Authors
+### Booking Model
+- Check-in/out dates with validation
+- Guest count and total price calculation
+- Status tracking (pending, confirmed, cancelled, completed)
+- Special requests and metadata
 
-- ALX Student - Initial work
+### Review Model
+- 1-5 star rating system
+- Title and detailed comments
+- Verification status
+- Linked to specific bookings
 
-## 🙏 Acknowledgments
+## Serializers
 
-- Django Project
-- Django REST Framework
-- ALX Africa for the learning opportunity
+### ListingSerializer
+- Includes host username for easy identification
+- Read-only fields for metadata
+- Automatic host assignment on creation
+
+### BookingSerializer
+- Calculates total nights automatically
+- Validates dates and guest counts
+- Includes listing and guest information
+
+### ReviewSerializer
+- Rating validation (1-5 stars)
+- Links to specific bookings
+- Guest and listing information
+
+## Database Seeding
+
+The seeding command creates:
+- **Hosts**: 3 default hosts for listings
+- **Guests**: Configurable number of additional users
+- **Listings**: Properties with realistic data
+- **Bookings**: Reservations with various statuses
+- **Reviews**: Ratings for completed bookings
+
+## Development
+
+### Running the Server
+```bash
+python manage.py runserver
+```
+
+### Admin Interface
+```bash
+python manage.py createsuperuser
+# Then visit http://localhost:8000/admin/
+```
+
+### API Documentation
+Visit `http://localhost:8000/swagger/` for interactive API documentation.
+
+## Key Learning Outcomes
+
+This project demonstrates:
+- **Django Models**: Relational data modeling with proper relationships
+- **Serializers**: Data transformation for API responses
+- **Management Commands**: Custom Django commands for database operations
+- **Data Seeding**: Automated database population for development
+- **Validation**: Model and serializer-level data validation
+- **Relationships**: Foreign keys, one-to-one, and many-to-many relationships
+
+## Dependencies
+
+- Django 5.2.6
+- Django REST Framework 3.16.1
+- Django CORS Headers 4.7.0
+- DRF YASG 1.21.10 (API documentation)
+- Django Environ 0.12.0 (Environment variables)
+
+## License
+
+This project is part of the ALX Software Engineering program.
