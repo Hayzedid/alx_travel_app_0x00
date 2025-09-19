@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     # Local apps
-    'listings',
+    'alx_travel_app.listings',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
